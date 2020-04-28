@@ -1,3 +1,4 @@
+rm result.txt
 g++ check.cpp -o check -std=c++11
 mkdir output
 rm -rf output/*

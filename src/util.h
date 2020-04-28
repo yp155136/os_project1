@@ -34,6 +34,8 @@ void set_cpu(pid_t pid, int cpu_id);
 
 void set_pri(struct Process *p, pid_t pid, int type);
 
+void real_start_process(struct Process **p);
+
 void start_process(struct Process *p);
 
 #endif // _UTIL_H 
