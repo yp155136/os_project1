@@ -12,10 +12,14 @@ void cal_sec(char* file) {
     my_file.open(file);
     int n = 10;
     for (int i = 0; i < 10; ++i) {
-        string s1, s2, s3;
+        string s1;
         int x;
         ld d1, d2;
-        my_file >> s1 >> s2 >> s3 >> x >> d1 >> d2;
+        while (my_file >> s1) {
+            if (s1 == "1]") break;
+        }
+        my_file >> x >> d1 >> d2;
+        // cerr << "s1 = " << s1 << " , s2 = " << s2 << " , s3 = " << s3 << " , x = " << x << " , d1 = " << d1 << " , d2 = " << d2 << endl;
         sec += (d2 - d1);
     }
     my_file.close();
@@ -84,8 +88,11 @@ struct DMESG {
     int pid;
     ld st, ed;
     void input(ifstream &ss) {
-        string a, b, c;
-        ss >> a >> b >> c >> pid >> st >> ed;
+        string a;
+        while (ss >> a) {
+            if (a == "1]") break;
+        }
+        ss >> pid >> st >> ed;
     }
     void output() {
         cerr << fixed << setprecision(9) << "(pid, st, ed) = (" << pid << ", " << st << ", " << ed << ")" << endl;
@@ -280,7 +287,7 @@ int main (int argc, char** argv) {
         fprintf(stderr, "Usage: ./check [TIME_MEASUREMENT_DMESG] [INPUT] [OUTPUT] [DMESG]");
         return 0;
     }
-    // cerr << argv[1] << ' ' << argv[2] << ' ' << argv[3] << ' ' << argv[4] << endl;
+    cerr << argv[1] << ' ' << argv[2] << ' ' << argv[3] << ' ' << argv[4] << endl;
     cal_sec(argv[1]);
     cerr << fixed << setprecision(9) << "seconds = " << sec << endl;
     read_input(argv[2]);
