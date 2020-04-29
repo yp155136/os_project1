@@ -14,8 +14,8 @@ sh demo/go.sh
 
 ## Run a single testdata
 
-Go the src/ directory, and type ```make``` can generator an executive file ```scheduler```
+Go to  ```src/``` directory, and type ```make```. It can generator an executive file ```scheduler```
 
 ## Demo video
 
-The demo video is demo/demo.mp4
+The demo video is ```demo/demo.mp4```
