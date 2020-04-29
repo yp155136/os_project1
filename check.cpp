@@ -7,7 +7,6 @@ ld sec = 0.0;
 const int TIME_QUAM = 500;
 
 void cal_sec(char* file) {
-    // freopen(file, "r", stdin);
     ifstream my_file;
     my_file.open(file);
     int n = 10;
@@ -19,12 +18,10 @@ void cal_sec(char* file) {
             if (s1 == "1]") break;
         }
         my_file >> x >> d1 >> d2;
-        // cerr << "s1 = " << s1 << " , s2 = " << s2 << " , s3 = " << s3 << " , x = " << x << " , d1 = " << d1 << " , d2 = " << d2 << endl;
         sec += (d2 - d1);
     }
     my_file.close();
     sec /= 10;
-    // fclose(stdin);
 }
 
 struct INPUT {
@@ -44,7 +41,6 @@ int n;
 vector<INPUT> inputs;
 
 void read_input(char* file) {
-    // freopen(file, "r", stdin);
     ifstream my_file;
     my_file.open(file);
     my_file >> policy;
@@ -53,7 +49,6 @@ void read_input(char* file) {
         INPUT input;
         input.input(my_file);
         inputs.push_back(input);
-        // input.output();
     }
     my_file.close();
 }
@@ -72,14 +67,12 @@ struct OUTPUT {
 vector<OUTPUT> outputs;
 
 void read_output(char* file) {
-    // cerr << "file = " << file << endl;
     ifstream my_file;
     my_file.open(file);
     for (int i = 0; i < n; ++i) {
         OUTPUT output;
         output.input(my_file);
         outputs.push_back(output);
-        // output.output();
     }
     my_file.close();
 }
@@ -102,16 +95,13 @@ struct DMESG {
 vector<DMESG> dmesgs;
 
 void read_dmesg(char* file) {
-    //freopen(file, "r", stdin);
     ifstream my_file;
     my_file.open(file);
     for (int i = 0; i < n; ++i) {
         DMESG dmesg;
         dmesg.input(my_file);
         dmesgs.push_back(dmesg);
-        // dmesg.output();
     }
-    // fclose(stdin);
     my_file.close();
 }
 
@@ -273,7 +263,6 @@ ld cal_real() {
     int j = 0;
     for (auto i: dmesgs) {
         ret += (i.ed - find_ready_time(i.pid));
-        cerr << "pid = " << i.pid << " , delta = " << fixed << setprecision(9) << i.ed - find_ready_time(i.pid) << endl;
     }
     return ret;
 }
@@ -287,9 +276,7 @@ int main (int argc, char** argv) {
         fprintf(stderr, "Usage: ./check [TIME_MEASUREMENT_DMESG] [INPUT] [OUTPUT] [DMESG]");
         return 0;
     }
-    cerr << argv[1] << ' ' << argv[2] << ' ' << argv[3] << ' ' << argv[4] << endl;
     cal_sec(argv[1]);
-    cerr << fixed << setprecision(9) << "seconds = " << sec << endl;
     read_input(argv[2]);
     read_output(argv[3]);
     read_dmesg(argv[4]);
