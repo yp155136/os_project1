@@ -1,6 +1,7 @@
 #include "scheduler.h"
 
 int get_policy() {
+    // read the policy and return the corresponding policy number
     // 1 --> FIFO
     // 2 --> SJF
     // 3 --> RR
@@ -34,7 +35,6 @@ int main () {
     for (int i = 0; i < n; ++i) {
         assert(scanf("%s %d %d", p[i].name, &p[i].ready_time, &p[i].exec_time) == 3);
         p[i].id = i;
-        p[i].running = 0;
         p[i].forked = 0;
     }
 

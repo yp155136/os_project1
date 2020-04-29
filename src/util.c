@@ -1,6 +1,8 @@
 #include "util.h"
 
 int cmp_process(const void *aa, const void *bb) {
+    // sort the process by ready time
+    // if ready time is the same, then sort by their order in the input
     struct Process *a = (struct Process*)aa, *b = (struct Process*)bb;
     if (a->ready_time > b->ready_time) {
         return 1;
@@ -21,6 +23,7 @@ int cmp_process(const void *aa, const void *bb) {
 } 
 
 void set_cpu(pid_t pid, int cpu_id) {
+    // let process pid runs in cpu_id
     cpu_set_t cpu;
     CPU_ZERO(&cpu);
     CPU_SET(cpu_id, &cpu);
@@ -32,32 +35,26 @@ void set_cpu(pid_t pid, int cpu_id) {
 }
 
 void set_pri(struct Process *p, pid_t pid, int type) {
-    // type == 0: lowest
-    // type == 1: highest
+    // set process p to the corresponding weight
+    // type == 0: lowest weight
+    // type == 1: highest weight
     struct sched_param param;
-    // fprintf(stderr, "forked = %d, type = %d, pid = %d\n", p->forked, type, pid);
-    if (type == 0 && p->forked == 0) return;
+    if (type == 0 && p->forked == 0) {
+        // if it is not forked and the priority is low, then I don't need to do anything
+        return;
+    }
     else if (type == 0) {
-        // param.sched_priority = 0;
-        // sched_setscheduler(pid, SCHED_IDLE, &param);
-        // return;
-        
+        // set to the lowest priority
         param.sched_priority = sched_get_priority_min(SCHED_FIFO);
-        // param.sched_priority = 1;
-        p->running = 0;
     }
     else if (type == 1) {
+        // set to high priority
         if (p->forked == 0) {
+            // if it is not forked, fork it
             real_start_process(&p);
-            // fprintf(stderr, "forked\n");
         }
-        // param.sched_priority = 0;
-        // sched_setscheduler(pid, SCHED_OTHER, &param);
-        
         param.sched_priority = sched_get_priority_max(SCHED_FIFO);
-        p->running = 1;
     }
-    // fprintf(stderr, "pid = %d, type = %d, pri = %d\n", pid, type, param.sched_priority);
     pid = p->pid;
     if (sched_setscheduler(pid, SCHED_FIFO, &param)) {
         fprintf(stderr, "set prioirty fail\n");
@@ -66,8 +63,7 @@ void set_pri(struct Process *p, pid_t pid, int type) {
 }
 
 void real_start_process(struct Process **p) {
-    // fprintf(stderr, "start process %d\n", p->id);
-
+    // fork the process
     pid_t pid = fork();
 
     if (pid < 0) {
@@ -75,44 +71,35 @@ void real_start_process(struct Process **p) {
         assert(0);
     }
     else if (pid == 0) {
-        // parent process
+        // child process
         struct timespec st, ed;
         syscall(334, &st);
         
         for (int i = 0; i < (*p)->exec_time; ++i) {
             UNIT_TIME
         }
-        // int status; wait(&status);
+
         syscall(334, &ed);
         syscall(335, getpid(), st.tv_sec, st.tv_nsec, ed.tv_sec, ed.tv_nsec);
 
-        // p->running = 0;
-        // p->id = 7122;
-        // fprintf(stderr, "wwwwwww p->id = %d, addr = %p, run = %d\n", p->id, &(*p), p->running);
-        // fflush(stderr);
         exit(0);
     }
     else if (pid > 0) {
-        // child process
+        // parent process
         (*p)->pid = pid;
         (*p)->forked = 1;
 
         set_cpu(pid, 1);
-        // set_pri(p, pid, 0);
 
         printf("%s %d\n", (*p)->name, (*p)->pid);
         fflush(stdout);
-        
-        /* for (int i = 0; i < p->exec_time; ++i) {
-            UNIT_TIME
-        } */
-
     }
 }
 
 void start_process(struct Process *p) {
+    // based on my design, this function needs to do nothing
+    // but if you want to change it to "what real process looks like to do", you can delete line 103
     return;
-    // fprintf(stderr, "start process %d\n", p->id);
 
     pid_t pid = fork();
 
@@ -128,14 +115,9 @@ void start_process(struct Process *p) {
         for (int i = 0; i < p->exec_time; ++i) {
             UNIT_TIME
         }
-        // int status; wait(&status);
         syscall(334, &ed);
         syscall(335, getpid(), st.tv_sec, st.tv_nsec, ed.tv_sec, ed.tv_nsec);
 
-        // p->running = 0;
-        // p->id = 7122;
-        // fprintf(stderr, "wwwwwww p->id = %d, addr = %p, run = %d\n", p->id, &(*p), p->running);
-        // fflush(stderr);
         exit(0);
     }
     else if (pid > 0) {
@@ -148,11 +130,6 @@ void start_process(struct Process *p) {
 
         printf("%s %d\n", p->name, p->pid);
         fflush(stdout);
-        
-        /* for (int i = 0; i < p->exec_time; ++i) {
-            UNIT_TIME
-        } */
-
     }
 }
 

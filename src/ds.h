@@ -3,12 +3,10 @@
 
 #include "util.h"
 
-int max(int a, int b);
-
 struct Treap {
     struct Treap *lc, *rc;
-    int sz, key, pri;
-    int val;
+    int sz, key, pri; // key is the execution time of the process
+    int val; // val is the id of the process
 };
 
 int Sz(struct Treap* t);
@@ -30,12 +28,14 @@ void pop_begin(struct Treap** root);
 int do_begin(struct Treap* now);
 
 struct Node {
+    // node of the doubly-linked-list
     struct Node* nxt;
     struct Node* pre;
     struct Process* val;
 };
 
 struct Queue {
+    // use doubly-linked-list to implement queue
     struct Node *head, *tail;
 };
 

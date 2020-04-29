@@ -24,7 +24,6 @@ struct Process {
     int id2; // index of sorted input
     pid_t pid; // process id
 
-    int running; // running or not
     int forked; // forked or not
 };
 
