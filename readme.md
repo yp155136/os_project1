@@ -19,3 +19,10 @@ Go to  ```src/``` directory, and type ```make```. It can generator an executive 
 ## Demo video
 
 The demo video is ```demo/demo.mp4```
+
+## Report
+
+It is in file ```report.pdf```.
+
+Online version link: https://hackmd.io/@yp155136/By3AqcBYL
+
